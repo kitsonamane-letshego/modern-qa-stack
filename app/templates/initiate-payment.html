@@ -1,0 +1,59 @@
+<html lang="en">
+
+<head>
+  <meta charset="utf-8"/> 
+  <title>Initiate A Payment</title>
+  <link rel="stylesheet" href="initiate-payment.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script src="https://js.paystack.co/v1/inline.js"></script>
+</head>
+
+<div class="w-full flex justify-center items-center pt-4">
+<form id="paymentForm" class="flex flex-col gap-4 justify-items-center">
+  <div class="form-group flex flex-col w-80">
+    <label for="email">Email Address</label>
+    <input class="rounded-md border-solid border-2 border-sky-500" type="email" id="email-address" required />
+  </div>
+  <div class="form-group flex flex-col w-80">
+    <label for="amount">Amount</label>
+    <input class="rounded-md border-solid border-2 border-sky-500" type="tel" id="amount" required />
+  </div>
+  <div class="form-group flex flex-col w-80">
+    <label for="first-name">First Name</label>
+    <input class="rounded-md border-solid border-2 border-sky-500" type="text" id="first-name" /> </div>
+  <div class="form-group flex flex-col w-80">
+    <label for="last-name">Last Name</label>
+    <input class="rounded-md border-solid border-2 border-sky-500" type="text" id="last-name" />
+  </div>
+  <div class="form-submit flex flex-col w-80">
+    <button class="rounded-md border-solid border-2 bg-sky-500 text-white p-2" type="submit" onclick="payWithPaystack()"> Pay </button>
+  </div>
+</form>
+<script>
+    function payWithPaystack(e) {
+      e.preventDefault();
+
+      let handler = PaystackPop.setup({
+        key: 'pk_test_4e17264dffad1111d90fb0e50e436c363a430aa5', // Replace with your public key
+        email: document.getElementById("email-address").value,
+        amount: document.getElementById("amount").value * 100,
+        ref: '' + Math.floor((Math.random() * 1000000000) + 1), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
+        // label: "Optional string that replaces customer email"
+        onClose: function () {
+          alert('Window closed.');
+        },
+        callback: function (response) {
+          let message = 'Payment complete! Reference: ' + response.reference;
+          alert(message);
+        }
+      });
+
+      handler.openIframe();
+    }
+    const paymentForm = document.getElementById('paymentForm');
+    paymentForm.addEventListener("submit", payWithPaystack, false);
+  </script>
+</div>
+</html>
